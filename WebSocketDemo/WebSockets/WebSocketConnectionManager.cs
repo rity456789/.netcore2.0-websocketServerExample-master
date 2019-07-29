@@ -16,25 +16,25 @@ namespace WebSocketDemo.WebSockets
         //mark socketID and user
         private List<Identification> _userIdentify = new List<Identification>(); //store id of socket and username
 
-        public void SetUserIdentification(string id, string username)
+        public void SetUserIdentification(string sId, int uId)
         {
             Identification user = new Identification();
-            user.sID = id;
-            user.username = username;
+            user.sId = sId;
+            user.uId = uId;
             _userIdentify.Add(user);
         }
 
-        public string GetUserIdentification(string username)
+        public string GetUserIdentification(int uId)
         {
-            var sID = "";
+            var sId = "";
             foreach (var identify in _userIdentify)
             {
-                if (username == identify.username)
+                if (uId == identify.uId)
                 {
-                    sID = identify.sID;
+                    sId = identify.sId;
                 }
             }
-            return sID;
+            return sId;
         }
 
 
@@ -80,7 +80,7 @@ namespace WebSocketDemo.WebSockets
                 _sockets.TryRemove(id, out socket);
 
                 //remove identify
-                var itemToRemove = _userIdentify.Single(r => r.sID == id);
+                var itemToRemove = _userIdentify.Single(r => r.sId == id);
                 _userIdentify.Remove(itemToRemove);
 
                 await socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);

@@ -7,7 +7,7 @@ namespace WebSocketDemo.Model
 {
     public class Identification
     {
-        public string sID { get; set; }
-        public string username { get; set; }
+        public string sId { get; set; }
+        public int uId { get; set; }
     }
 }
