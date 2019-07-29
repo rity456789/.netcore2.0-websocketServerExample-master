@@ -24,11 +24,6 @@ namespace WebSocketDemo.WebSockets
             _userIdentify.Add(user);
         }
 
-        public WebSocketConnectionManager()
-        {
-
-        }
-
         public string GetUserIdentification(string username)
         {
             var sID = "";

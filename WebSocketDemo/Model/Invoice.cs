@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebSocketDemo.Model
 {
-    public class JSON_data
+    public class Invoice
     {
         public int Id { get; set; }
         public string Message { get; set; }
@@ -14,5 +14,7 @@ namespace WebSocketDemo.Model
         public string Type { get; set; }
         public string Time { get; set; }
         public int Status { get; set; }
+        public bool ReplyInvoice { get; set; }
+        public int ReplyID { get; set; }
     }
 }

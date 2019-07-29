@@ -27,12 +27,12 @@ namespace WebSocketDemo.WebSockets
             else
             {
                 var data = JObject.Parse(message);
-                var receiver = data["ReceiverId"].ToString();
-                var receiverWSID = WebSocketConnectionManager.GetUserIdentification(receiver);
                 //to do: luu db
 
-
-                await SendMessageAsync(receiverWSID, message);
+                
+                //var receiver = data["ReceiverId"].ToString();
+                //var receiverWSID = WebSocketConnectionManager.GetUserIdentification(receiver);
+                //await SendMessageAsync(receiverWSID, message);
             }
         }
     }
