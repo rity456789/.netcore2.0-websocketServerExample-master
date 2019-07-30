@@ -25,45 +25,38 @@ namespace WebSocketDemo.WebSockets
         {
             string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
             if (message.Substring(0, 4) == "1a2b")
-            {
+            {   // code use to set identify
                 Identify(socket, message);
+            }
+            else if (message.Substring(0, 4) == "3c4d")
+            {   //code use to set status (approved) of invoice
+                var id = Int32.Parse(message.Substring(5));
+                await UpdateInvoiceStatus(id, Status.Approved);
             }
             else
             {
                 JObject data = JObject.Parse(message);
                 Invoice invoice = new Invoice(data);
-                if (invoice.Type == InvoiceType.Replied)
-                {// invoice need to reply
-                    if (!invoice.ReplyInvoice)
-                    {
-                        //reply task
-                        await StoreAndSendInvoice(invoice);
-                    }
-                    else
-                    {
-                        //reply other invoice
-                        //update status (3-reply) of invoice replied by this invoice
-                        await UpdateInvoiceStatus(invoice.ReplyId);
-                        await StoreAndSendInvoice(invoice);
-                    }
-                }
-                else if (invoice.Type == InvoiceType.Approved)
+                if (!invoice.ReplyInvoice)
                 {
-
+                    //reply task
+                    await StoreAndSendInvoice(invoice);
                 }
-                else if (invoice.Type == InvoiceType.Seen)
+                else
                 {
-
+                    //reply other invoice
+                    //update status (3-reply) of invoice replied by this invoice
+                    await UpdateInvoiceStatus(invoice.ReplyId, Status.Replied);
+                    await StoreAndSendInvoice(invoice);
                 }
-                else { }
             }
         }
 
-        private async Task UpdateInvoiceStatus(int replyId)
+        private async Task UpdateInvoiceStatus(int replyId, Status status)
         {
-            var uri = new Uri(UrlString + "/" + replyId.ToString());
+            var uri = new Uri(UrlString + "/" + replyId.ToString()) + "/" + status;
             var jsonInString = JsonConvert.SerializeObject(10);
-            var response = await Client.PutAsync(uri, new StringContent(jsonInString, Encoding.UTF8, "application/json"));
+            var response = await Client.PutAsJsonAsync(uri, new StringContent(jsonInString, Encoding.UTF8, "application/json"));
         }
 
         private async Task StoreAndSendInvoice(Invoice invoice)
