@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WebSocketDemo.Model;
+using Type = System.Type;
 
 namespace WebSocketDemo.WebSockets
 {
@@ -31,23 +32,37 @@ namespace WebSocketDemo.WebSockets
             {
                 JObject data = JObject.Parse(message);
                 Invoice invoice = new Invoice(data);
-                if (!invoice.ReplyInvoice)
-                {   //reply task
-                    await StoreAndSendInvoice(invoice);
+                if (invoice.Type == InvoiceType.Replied)
+                {// invoice need to reply
+                    if (!invoice.ReplyInvoice)
+                    {
+                        //reply task
+                        await StoreAndSendInvoice(invoice);
+                    }
+                    else
+                    {
+                        //reply other invoice
+                        //update status (3-reply) of invoice replied by this invoice
+                        await UpdateInvoiceStatus(invoice.ReplyId);
+                        await StoreAndSendInvoice(invoice);
+                    }
                 }
-                else
-                {   //reply other invoice
-                    //update status (3-reply) of invoice replied by this invoice
-                    await UpdateInvoiceStatus(invoice);
+                else if (invoice.Type == InvoiceType.Approved)
+                {
+
                 }
+                else if (invoice.Type == InvoiceType.Seen)
+                {
+
+                }
+                else { }
             }
         }
 
-        private async Task UpdateInvoiceStatus(Invoice invoice)
+        private async Task UpdateInvoiceStatus(int replyId)
         {
-            invoice.Status = 3; //approved
-            var uri = new Uri(UrlString + "/" + invoice.ReplyId.ToString());
-            var jsonInString = JsonConvert.SerializeObject(invoice);
+            var uri = new Uri(UrlString + "/" + replyId.ToString());
+            var jsonInString = JsonConvert.SerializeObject(10);
             var response = await Client.PutAsync(uri, new StringContent(jsonInString, Encoding.UTF8, "application/json"));
         }
 
@@ -64,7 +79,7 @@ namespace WebSocketDemo.WebSockets
             }
             else
             {
-                invoice.Status = 1; //sent
+                invoice.Status = Status.Sent; //sent
                 var uri = new Uri(UrlString);
                 var jsonInString = JsonConvert.SerializeObject(invoice);
                 var response = await Client.PostAsync(uri, new StringContent(jsonInString, Encoding.UTF8, "application/json"));
