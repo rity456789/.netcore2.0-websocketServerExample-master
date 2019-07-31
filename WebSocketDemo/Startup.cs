@@ -44,7 +44,7 @@ namespace WebSocketDemo
             };
 
             app.UseWebSockets(wsOptions);
-            app.MapWebSocketManager("/chat", serviceProvider.GetService<ChatRoomHandler>());
+            app.MapWebSocketManager("/notification", serviceProvider.GetService<NotificationHandler>());
             app.UseMvc();
         }
     }

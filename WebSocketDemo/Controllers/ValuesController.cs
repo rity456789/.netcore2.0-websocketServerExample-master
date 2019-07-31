@@ -10,16 +10,16 @@ namespace WebSocketDemo.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        private  ChatRoomHandler chatRoomHandler { get; set; }
-        public ValuesController(ChatRoomHandler handler)
+        private NotificationHandler notificationHandler { get; set; }
+        public ValuesController(NotificationHandler handler)
         {
-            chatRoomHandler = handler;
+            notificationHandler = handler;
         }
         // GET api/values
         [HttpGet]
         public async Task<IEnumerable<string>> Get()
         {
-            await chatRoomHandler.SendMessageToAllAsync("hello from controller");
+            await notificationHandler.SendMessageToAllAsync("hello from controller");
             return new string[] { "value1", "value2" };
 
         }

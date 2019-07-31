@@ -43,11 +43,6 @@ namespace WebSocketDemo.WebSockets
             return _sockets.FirstOrDefault(p => p.Key == id).Value;
         }
 
-        public void SetSocketById(string oldId, string newId)
-        {
-            var socket = _sockets.FirstOrDefault(p => p.Key == oldId).Value;
-            
-        }
 
         public ConcurrentDictionary<string, WebSocket> GetAll()
         {

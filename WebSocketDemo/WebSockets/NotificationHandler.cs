@@ -8,16 +8,15 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WebSocketDemo.Model;
-using Type = System.Type;
 
 namespace WebSocketDemo.WebSockets
 {
-    public class ChatRoomHandler : WebSocketHandler
+    public class NotificationHandler : WebSocketHandler
     {
         private static readonly HttpClient Client = new HttpClient(); //read db from api
         private const string UrlString = "https://localhost:44373/api/invoice";
 
-        public ChatRoomHandler(WebSocketConnectionManager webSocketConnectionManager) : base(webSocketConnectionManager)
+        public NotificationHandler(WebSocketConnectionManager webSocketConnectionManager) : base(webSocketConnectionManager)
         {
 
         }
@@ -56,7 +55,7 @@ namespace WebSocketDemo.WebSockets
         {
             var uri = new Uri(UrlString + "/" + replyId.ToString()) + "/" + status;
             var jsonInString = JsonConvert.SerializeObject(10);
-            var response = await Client.PutAsJsonAsync(uri, new StringContent(jsonInString, Encoding.UTF8, "application/json"));
+            await Client.PutAsJsonAsync(uri, new StringContent(jsonInString, Encoding.UTF8, "application/json"));
         }
 
         private async Task StoreAndSendInvoice(Invoice invoice)
@@ -68,7 +67,7 @@ namespace WebSocketDemo.WebSockets
             {   //store invoice to db without change status
                 var uri = new Uri(UrlString);
                 var jsonInString = JsonConvert.SerializeObject(invoice);
-                var response = await Client.PostAsync(uri, new StringContent(jsonInString, Encoding.UTF8, "application/json"));
+                await Client.PostAsync(uri, new StringContent(jsonInString, Encoding.UTF8, "application/json"));
             }
             else
             {

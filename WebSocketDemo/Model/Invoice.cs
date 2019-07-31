@@ -49,7 +49,6 @@ namespace WebSocketDemo.Model
             Message = data["Message"].ToString();
             SenderId = Int32.Parse(data["SenderId"].ToString());
             ReceiverId = Int32.Parse(data["ReceiverId"].ToString());
-            var temp = 1;
             Method = (Method)Int32.Parse(data["Method"].ToString());
             Type = (InvoiceType)Int32.Parse(data["Type"].ToString());
             Time = data["Time"].ToString();
